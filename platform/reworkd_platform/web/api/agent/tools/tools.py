@@ -9,6 +9,7 @@ from reworkd_platform.web.api.agent.tools.reason import Reason
 from reworkd_platform.web.api.agent.tools.search import Search
 from reworkd_platform.web.api.agent.tools.sidsearch import SID
 from reworkd_platform.web.api.agent.tools.tool import Tool
+from reworkd_platform.web.api.agent.tools.file_git_code_tool import FileGitCodeTool
 
 
 async def get_user_tools(
@@ -33,6 +34,7 @@ def get_external_tools() -> List[Type[Tool]]:
         Search,
         Code,
         SID,
+        FileGitCodeTool,
     ]
 
 
