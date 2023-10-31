@@ -27,11 +27,7 @@ def get_tool_function(tool: Type[Tool]) -> FunctionDescription:
             "properties": {
                 "reasoning": {
                     "type": "string",
-                    "description": (
-                        f"Reasoning is how the task will be accomplished with the current function. "
-                        "Detail your overall plan along with any concerns you have."
-                        "Ensure this reasoning value is in the user defined langauge "
-                    ),
+                    "description": 'Reasoning is how the task will be accomplished with the current function. Detail your overall plan along with any concerns you have.Ensure this reasoning value is in the user defined langauge ',
                 },
                 "arg": {
                     "type": "string",
