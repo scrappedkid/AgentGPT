@@ -155,13 +155,13 @@ class AutonomousAgent {
     }
   }
 
-  async createTaskMessages(tasks: string[]) {
+  async createTaskMessages(tasks: string[], parentTaskId?: string) {
     const TIMOUT_SHORT = 150;
     const messages: Message[] = [];
 
     for (const value of tasks) {
       messages.push(this.messageService.startTask(value));
-      this.model.addTask(value);
+      this.model.addTask(value, parentTaskId);
       await new Promise((r) => setTimeout(r, TIMOUT_SHORT));
     }
 
