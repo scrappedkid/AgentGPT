@@ -63,13 +63,14 @@ export class DefaultAgentRunModel implements AgentRunModel {
   getCompletedTasks = (): Task[] =>
     useTaskStore.getState().tasks.filter((t: Task) => t.status === "completed");
 
-  addTask = (taskValue: string): void =>
+  addTask = (taskValue: string, parentTaskId?: string): void =>
     useTaskStore.getState().addTask({
       id: v4().toString(),
       type: "task",
       value: taskValue,
       status: "started",
       result: "",
+      parentTaskId, // include the parent task when creating a new task
     });
 
   updateTaskStatus(task: Task, status: TaskStatus): Task {

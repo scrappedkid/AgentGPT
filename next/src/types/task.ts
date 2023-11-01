@@ -30,6 +30,7 @@ export const taskSchema = z
     type: z.literal(MESSAGE_TYPE_TASK),
     status: TaskStatusSchema,
     result: z.string().optional(),
+    parentTaskId: z.string().optional(), // new property to keep track of the parent task
   })
   .merge(messageSchemaBase);
 
