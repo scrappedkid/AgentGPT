@@ -1,11 +1,51 @@
-# reworkd_platform
+# AgentGPT Platform
 
-This project was generated using fastapi_template.
+This is the platform module of the AgentGPT project. It is responsible for the initialization and management of autonomous AI agents. The platform module interacts with the other modules of the AgentGPT project to enable the agents to perform a variety of tasks and learn from the results.
 
-## Poetry
+The platform module is primarily written in Python and makes use of the FastAPI framework for the backend. It also uses Docker for containerization and deployment.
 
-This project uses poetry. It's a modern dependency management
-tool.
+This readme provides a detailed overview of the platform module's functionality and its role within the larger AgentGPT project.
+
+## Platform Agent Processing Steps
+
+The following Mermaid diagram illustrates the entire chain of processing steps for a platform agent, from initialization to the completion of all tasks.
+
+```mermaid
+graph TD
+A[Initialization] --> B[Task Sequence]
+B --> C[Task Summarization]
+C --> D[Task Completion]
+```
+
+- **Initialization**: This is the first step in the processing chain. During initialization, a new agent is created and configured.
+- **Task Sequence**: After initialization, the agent performs a sequence of tasks. These tasks can vary depending on the agent's configuration and the specific goals it has been assigned.
+- **Task Summarization**: Once all tasks have been performed, the agent summarizes the results. This involves analyzing the outcomes of the tasks and determining what the agent has learned.
+- **Task Completion**: Finally, the agent completes all tasks. This marks the end of the processing chain.
+
+## Project Structure
+
+```bash
+$ tree "reworkd_platform"
+reworkd_platform
+├── conftest.py  # Fixtures for all tests.
+├── db  # module contains db configurations
+│   ├── dao  # Data Access Objects. Contains different classes to interact with database.
+│   └── models  # Package contains different models for ORMs.
+├── __main__.py  # Startup script. Starts uvicorn.
+├── services  # Package for different external services such as rabbit or redis etc.
+├── settings.py  # Main configuration settings for project.
+├── static  # Static content.
+├── tests  # Tests for project.
+└── web  # Package contains web server. Handlers, startup config.
+    ├── api  # Package with all handlers.
+    │   └── router.py  # Main router.
+    ├── application.py  # FastAPI application configuration.
+    └── lifetime.py  # Contains actions to perform on startup and shutdown.
+```
+
+## Running the Project
+
+This project uses poetry. It's a modern dependency management tool.
 
 To run the project use this set of commands:
 
@@ -41,27 +81,6 @@ But you have to rebuild image every time you modify `poetry.lock` or `pyproject.
 
 ```bash
 docker-compose -f deploy/docker-compose.yml --project-directory . build
-```
-
-## Project structure
-
-```bash
-$ tree "reworkd_platform"
-reworkd_platform
-├── conftest.py  # Fixtures for all tests.
-├── db  # module contains db configurations
-│   ├── dao  # Data Access Objects. Contains different classes to interact with database.
-│   └── models  # Package contains different models for ORMs.
-├── __main__.py  # Startup script. Starts uvicorn.
-├── services  # Package for different external services such as rabbit or redis etc.
-├── settings.py  # Main configuration settings for project.
-├── static  # Static content.
-├── tests  # Tests for project.
-└── web  # Package contains web server. Handlers, startup config.
-    ├── api  # Package with all handlers.
-    │   └── router.py  # Main router.
-    ├── application.py  # FastAPI application configuration.
-    └── lifetime.py  # Contains actions to perform on startup and shutdown.
 ```
 
 ## Configuration
