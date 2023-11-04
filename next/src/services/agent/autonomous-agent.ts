@@ -115,12 +115,13 @@ class AutonomousAgent {
 
   addTasksIfWorklogEmpty = () => {
     if (this.workLog.length > 0) return;
-
-    // No work items, check if we still have tasks
-    const currentTask = this.model.getCurrentTask();
-    if (currentTask) {
-      this.workLog.push(new AnalyzeTaskWork(this, currentTask));
-    }
+    // Determine the sequence of tasks based on their dependencies.
+    // This could involve sorting the tasks based on their dependencies or using a more complex algorithm.
+    const sortedTasks = this.model.getRemainingTasks().sort((a, b) => {
+      // Implement the sorting logic here.
+    });
+    // Add the sorted tasks to the work log.
+    this.workLog.push(...sortedTasks.map((task) => new AnalyzeTaskWork(this, task)));
   };
 
   pauseAgent() {
