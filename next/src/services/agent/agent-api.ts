@@ -33,7 +33,6 @@ export class AgentApi {
 
   saveMessages(messages: Message[]): void {
     if (!this.agentId) return;
-
     this.props.agentUtils.saveAgent({
       id: this.agentId,
       tasks: messages,
