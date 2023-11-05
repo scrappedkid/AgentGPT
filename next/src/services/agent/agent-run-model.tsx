@@ -45,15 +45,12 @@ export class DefaultAgentRunModel implements AgentRunModel {
     this.id = v4().toString();
     this.goal = goal;
   }
-  getCompletedTasks(): z.infer<any>[] {
-    throw new Error("Method not implemented.");
-  }
   getCurrentTask() {
     throw new Error("Method not implemented.");
   }
-  
-  getId = () => this.id;
 
+
+    getId = () => this.id;
 
   getGoal = () => this.goal;
   getLifecycle = (): AgentLifecycle => useAgentStore.getState().lifecycle;
@@ -97,39 +94,4 @@ export class DefaultAgentRunModel implements AgentRunModel {
     }
     return task;
   };
-}  getId(): string {
-    throw new Error("Method not implemented.");
-  }
-  getGoal(): string {
-    throw new Error("Method not implemented.");
-  }
-  getLifecycle(): AgentLifecycle {
-    throw new Error("Method not implemented.");
-  }
-  setLifecycle(AgentLifecycle: any): void {
-    throw new Error("Method not implemented.");
-  }
-  getRemainingTasks(): z.infer<any>[] {
-    throw new Error("Method not implemented.");
-  }
-  getCurrentTask() {
-    throw new Error("Method not implemented.");
-  }
-  updateTaskStatus(task: z.infer<any>, status: z.infer<any>) {
-    throw new Error("Method not implemented.");
-  }
-  updateTaskResult(task: z.infer<any>, result: string) {
-    throw new Error("Method not implemented.");
-  }
-  getCompletedTasks(): z.infer<any>[] {
-    throw new Error("Method not implemented.");
-  }
-  addTask(taskValue: string, parentTaskId?: string | undefined): void {
-    throw new Error("Method not implemented.");
-  }
-  removeTask(task: z.infer<any>): void {
-    throw new Error("Method not implemented.");
-  }
-  updateTask(task: z.infer<any>) {
-    throw new Error("Method not implemented.");
-  }
+}
