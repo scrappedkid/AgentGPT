@@ -26,13 +26,12 @@ async def _sid_search_results(
 
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://api.sid.ai/v1/users/me/query",
-            headers=headers,
-            data=json.dumps(data),
-        ) as response:
+                    "https://api.sid.ai/v1/users/me/query",
+                    headers=headers,
+                    data=json.dumps(data),
+                ) as response:
             response.raise_for_status()
-            search_results = await response.json()
-            return search_results
+            return await response.json()
 
 
 async def token_exchange(refresh_token: str) -> tuple[str, datetime]:

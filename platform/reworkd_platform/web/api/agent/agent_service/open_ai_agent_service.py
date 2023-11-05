@@ -81,9 +81,7 @@ class OpenAIAgentService(AgentService):
         )
 
         task_output_parser = TaskOutputParser(completed_tasks=[])
-        tasks = parse_with_handling(task_output_parser, completion)
-
-        return tasks
+        return parse_with_handling(task_output_parser, completion)
 
     async def analyze_task_agent(
         self, *, goal: str, task: str, tool_names: List[str]
@@ -186,7 +184,7 @@ class OpenAIAgentService(AgentService):
 
         snippet_max_tokens = 7000  # Leave room for the rest of the prompt
         text_tokens = self.token_service.tokenize("".join(results))
-        text = self.token_service.detokenize(text_tokens[0:snippet_max_tokens])
+        text = self.token_service.detokenize(text_tokens[:snippet_max_tokens])
         logger.info(f"Summarizing text: {text}")
 
         return summarize(

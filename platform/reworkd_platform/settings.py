@@ -113,10 +113,7 @@ class Settings(BaseSettings):
         mode, making it easier to share a dev cluster.
         """
 
-        if self.environment == "development":
-            return platform.node()
-
-        return "platform"
+        return platform.node() if self.environment == "development" else "platform"
 
     @property
     def db_url(self) -> URL:
