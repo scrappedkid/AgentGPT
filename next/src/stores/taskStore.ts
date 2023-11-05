@@ -29,10 +29,15 @@ export const createTaskSlice: StateCreator<TaskSlice, [], [], TaskSlice> = (set)
   return {
     ...initialTaskState,
     addTask: (newTask) => {
-      set((state) => ({
-        ...state,
-        tasks: [...state.tasks, { ...newTask }],
-      }));
+      set((state) => {
+        const tasks = [...state.tasks];
+        const parentTaskIndex = tasks.findIndex(task => task.taskId === newTask.parentTaskId);
+        tasks.splice(parentTaskIndex + 1, 0, { ...newTask });
+        return {
+          ...state,
+          tasks,
+        };
+      });
     },
     updateTask: (updatedTask) => {
       set((state) => {

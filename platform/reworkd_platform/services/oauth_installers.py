@@ -66,7 +66,7 @@ class SIDInstaller(OAuthInstaller):
             "audience": "https://api.sid.ai/api/v1/",
         }
         auth_url = "https://me.sid.ai/api/oauth/authorize"
-        auth_url += "?" + urlencode(params)
+        auth_url += f"?{urlencode(params)}"
         return auth_url
 
     async def install_callback(self, code: str, state: str) -> OauthCredentials:

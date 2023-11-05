@@ -27,6 +27,10 @@ export interface AgentRunModel {
   getCompletedTasks(): Task[];
 
   addTask(taskValue: string): void;
+
+  removeTask(task: Task): void;
+
+  updateTask(task: Task): Task;
 }
 
 export type AgentLifecycle = "offline" | "running" | "pausing" | "paused" | "stopped";
@@ -55,14 +59,25 @@ export class DefaultAgentRunModel implements AgentRunModel {
   getCompletedTasks = (): Task[] =>
     useTaskStore.getState().tasks.filter((t: Task) => t.status === "completed");
 
-  addTask = (taskValue: string): void =>
-    useTaskStore.getState().addTask({
-      id: v4().toString(),
-      type: "task",
-      value: taskValue,
-      status: "started",
-      result: "",
-    });
+  addTask = (taskValue: string, parentTaskId?: string): void => {
+    if (!this.tasks.find((t) => t.value === taskValue)) {
+      useTaskStore.getState().addTask({
+        id: v4().toString(),
+        type: "task",
+        value: taskValue,
+        status: "started",
+        result: "",
+        parentTaskId,
+      });
+    }
+  };
+
+  removeTask = (task: Task): void => {
+    const taskIndex = this.tasks.findIndex((t) => t.id === task.id);
+    if (taskIndex > -1) {
+      this.tasks.splice(taskIndex, 1);
+    }
+  };
 
   updateTaskStatus(task: Task, status: TaskStatus): Task {
     return this.updateTask({ ...task, status });
@@ -72,8 +87,11 @@ export class DefaultAgentRunModel implements AgentRunModel {
     return this.updateTask({ ...task, result });
   }
 
-  updateTask(updatedTask: Task): Task {
-    useTaskStore.getState().updateTask(updatedTask);
-    return updatedTask;
-  }
+  updateTask = (task: Task): Task => {
+    const taskIndex = this.tasks.findIndex((t) => t.id === task.id);
+    if (taskIndex > -1) {
+      this.tasks[taskIndex] = task;
+    }
+    return task;
+  };
 }

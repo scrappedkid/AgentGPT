@@ -71,7 +71,4 @@ class OAuthCrud(BaseCrud):
             .group_by(OauthCredentials.provider)
         )
 
-        return {
-            provider: token
-            for provider, token in (await self.session.execute(query)).all()
-        }
+        return dict((await self.session.execute(query)).all())

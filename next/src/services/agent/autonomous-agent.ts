@@ -42,7 +42,6 @@ class AutonomousAgent {
   async run() {
     this.model.setLifecycle("running");
 
-    // If an agent is paused during execution, we need to play work conclusions
     if (this.lastConclusion) {
       await this.lastConclusion();
       this.lastConclusion = undefined;
@@ -50,12 +49,12 @@ class AutonomousAgent {
 
     this.addTasksIfWorklogEmpty();
     while (this.workLog[0]) {
-      // No longer running, dip
       if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
       if (this.model.getLifecycle() !== "running") return;
 
-      // Get and run the next work item
       const work = this.workLog[0];
+      const workData = this.workLog[0].getData();
+      const next = this.workLog[0].next(workData);
       await this.runWork(work, () => this.model.getLifecycle() === "stopped");
 
       this.workLog.shift();
@@ -65,8 +64,6 @@ class AutonomousAgent {
         await work.conclude();
       }
 
-      // Add next thing if available
-      const next = work.next();
       if (next) {
         this.workLog.push(next);
       }
@@ -78,12 +75,9 @@ class AutonomousAgent {
     if (this.model.getLifecycle() !== "running") return;
 
     // Done with everything in the log and all queued tasks
-    this.stopAgent();
+    this.messageService.sendCompletedMessage();
   }
 
-  /*
-   * Runs a provided work object with error handling and retries
-   */
   private async runWork(work: AgentWork, shouldStop: () => boolean = () => false) {
     const RETRY_TIMEOUT = 2000;
 
@@ -101,7 +95,6 @@ class AutonomousAgent {
         }
 
         if (shouldRetry) {
-          // Wait a bit before retrying
           useAgentStore.getState().setIsAgentThinking(true);
           await new Promise((r) => setTimeout(r, RETRY_TIMEOUT));
         }
@@ -114,8 +107,6 @@ class AutonomousAgent {
 
   addTasksIfWorklogEmpty = () => {
     if (this.workLog.length > 0) return;
-
-    // No work items, check if we still have tasks
     const currentTask = this.model.getCurrentTask();
     if (currentTask) {
       this.workLog.push(new AnalyzeTaskWork(this, currentTask));
@@ -154,13 +145,13 @@ class AutonomousAgent {
     }
   }
 
-  async createTaskMessages(tasks: string[]) {
+  async createTaskMessages(tasks: string[], parentTaskId?: string) {
     const TIMOUT_SHORT = 150;
     const messages: Message[] = [];
 
     for (const value of tasks) {
       messages.push(this.messageService.startTask(value));
-      this.model.addTask(value);
+      this.model.addTask(value, parentTaskId);
       await new Promise((r) => setTimeout(r, TIMOUT_SHORT));
     }
 

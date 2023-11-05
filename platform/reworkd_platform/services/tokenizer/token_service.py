@@ -23,7 +23,7 @@ class TokenService:
 
     def get_completion_space(self, model: LLM_Model, *prompts: str) -> int:
         max_allowed_tokens = LLM_MODEL_MAX_TOKENS.get(model, 4000)
-        prompt_tokens = sum([self.count(p) for p in prompts])
+        prompt_tokens = sum(self.count(p) for p in prompts)
         return max_allowed_tokens - prompt_tokens
 
     def calculate_max_tokens(self, model: WrappedChatOpenAI, *prompts: str) -> None:
