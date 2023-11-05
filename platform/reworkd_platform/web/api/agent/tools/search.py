@@ -1,10 +1,14 @@
 from typing import Any, List
+from urllib.parse import quote
 
 import aiohttp
+from aiohttp import ClientResponseError
 from fastapi.responses import StreamingResponse as FastAPIStreamingResponse
+from loguru import logger
 
 from reworkd_platform.settings import settings
 from reworkd_platform.web.api.agent.stream_mock import stream_string
+from reworkd_platform.web.api.agent.tools.reason import Reason
 from reworkd_platform.web.api.agent.tools.tool import Tool
 from reworkd_platform.web.api.agent.tools.utils import (
     CitedSnippet,
@@ -50,6 +54,17 @@ class Search(Tool):
     async def call(
         self, goal: str, task: str, input_str: str, *args: Any, **kwargs: Any
     ) -> FastAPIStreamingResponse:
+        try:
+            return await self._call(goal, task, input_str, *args, **kwargs)
+        except ClientResponseError:
+            logger.exception("Error calling Serper API, falling back to reasoning")
+            return await Reason(self.model, self.language).call(
+                goal, task, input_str, *args, **kwargs
+            )
+
+    async def _call(
+        self, goal: str, task: str, input_str: str, *args: Any, **kwargs: Any
+    ) -> FastAPIStreamingResponse:
         results = await _google_serper_search_results(
             input_str,
         )
@@ -67,8 +82,14 @@ class Search(Tool):
             elif answer_box.get("snippetHighlighted"):
                 answer_values.append(", ".join(answer_box.get("snippetHighlighted")))
 
-            if answer_values:
-                return stream_string("\n".join(answer_values), True)
+            if len(answer_values) > 0:
+                snippets.append(
+                    CitedSnippet(
+                        len(snippets) + 1,
+                        "\n".join(answer_values),
+                        f"https://www.google.com/search?q={quote(input_str)}",
+                    )
+                )
 
         for i, result in enumerate(results["organic"][:k]):
             texts = []
@@ -77,11 +98,9 @@ class Search(Tool):
                 texts.append(result["snippet"])
             if "link" in result:
                 link = result["link"]
-            texts.extend(
-                f"{attribute}: {value}."
-                for attribute, value in result.get("attributes", {}).items()
-            )
-            snippets.append(CitedSnippet(i + 1, "\n".join(texts), link))
+            for attribute, value in result.get("attributes", {}).items():
+                texts.append(f"{attribute}: {value}.")
+            snippets.append(CitedSnippet(len(snippets) + 1, "\n".join(texts), link))
 
         if not snippets:
             return stream_string("No good Google Search Result was found", True)

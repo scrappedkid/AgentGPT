@@ -8,6 +8,7 @@ import type AutonomousAgent from "../autonomous-agent";
 
 export default class SummarizeWork implements AgentWork {
   constructor(private parent: AutonomousAgent) {}
+  getData!: () => any;
 
   run = async () => {
     const executionMessage: Message = {

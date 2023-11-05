@@ -10,8 +10,6 @@ import type { Task, TaskStatus } from "../../types/task";
 export interface AgentRunModel {
   getId(): string;
 
-  getName(): string;
-
   getGoal(): string;
 
   getLifecycle(): AgentLifecycle;
@@ -28,32 +26,27 @@ export interface AgentRunModel {
 
   getCompletedTasks(): Task[];
 
-  addTask(taskValue: string): void;
+  addTask(taskValue: string, parentTaskId?: string): void;
 
   removeTask(task: Task): void;
 
   updateTask(task: Task): Task;
 }
- 
+
 export type AgentLifecycle = "offline" | "running" | "pausing" | "paused" | "stopped";
 
 export class DefaultAgentRunModel implements AgentRunModel {
-  id: string;
-  name: string;
-  goal: string;
-  tasks: string[];
-  completedTasks: string[];
+  private readonly id: string;
+  private readonly goal: string;
+  tasks: any;
 
-  constructor(name: string, goal: string) {
+  constructor(goal: string) {
     this.id = v4().toString();
-    this.name = name;
     this.goal = goal;
-    this.tasks = [];
-    this.completedTasks = [];
   }
 
   getId = () => this.id;
-  getName = () => this.name;
+
   getGoal = () => this.goal;
   getLifecycle = (): AgentLifecycle => useAgentStore.getState().lifecycle;
   setLifecycle = (lifecycle: AgentLifecycle) => useAgentStore.getState().setLifecycle(lifecycle);
