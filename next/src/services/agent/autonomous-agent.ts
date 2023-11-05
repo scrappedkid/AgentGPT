@@ -74,8 +74,8 @@ class AutonomousAgent {
     if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
     if (this.model.getLifecycle() !== "running") return;
 
+    // Done with everything in the log and all queued tasks
     this.messageService.sendCompletedMessage();
-    this.stopAgent();
   }
 
   private async runWork(work: AgentWork, shouldStop: () => boolean = () => false) {
