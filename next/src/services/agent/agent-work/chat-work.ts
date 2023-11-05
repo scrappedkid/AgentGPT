@@ -8,6 +8,7 @@ import type AutonomousAgent from "../autonomous-agent";
 
 export default class ChatWork implements AgentWork {
   constructor(private parent: AutonomousAgent, private message: string) {}
+  getData: () => any;
 
   run = async () => {
     const executionMessage: Message = {

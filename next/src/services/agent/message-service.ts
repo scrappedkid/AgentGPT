@@ -10,6 +10,9 @@ import type { Task } from "../../types/task";
 import { translate } from "../../utils/translations";
 
 export class MessageService {
+  sendCompletedMessage() {
+    throw new Error("Method not implemented.");
+  }
   private readonly renderMessage: (message: Message) => void;
 
   constructor(renderMessage: (message: Message) => void) {

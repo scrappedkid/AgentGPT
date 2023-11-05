@@ -9,6 +9,7 @@ export default class AnalyzeTaskWork implements AgentWork {
   analysis: Analysis | undefined = undefined;
 
   constructor(private parent: AutonomousAgent, private task: Task) {}
+  getData!: () => any;
 
   run = async () => {
     this.task = this.parent.model.updateTaskStatus(this.task, "executing");

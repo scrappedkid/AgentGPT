@@ -12,6 +12,7 @@ export default class ExecuteTaskWork implements AgentWork {
   result = "";
 
   constructor(private parent: AutonomousAgent, private task: Task, private analysis: Analysis) {}
+  getData!: () => any;
 
   run = async () => {
     const executionMessage: Message = {

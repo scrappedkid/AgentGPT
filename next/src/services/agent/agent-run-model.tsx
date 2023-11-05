@@ -26,25 +26,31 @@ export interface AgentRunModel {
 
   getCompletedTasks(): Task[];
 
-  addTask(taskValue: string): void;
+  addTask(taskValue: string, parentTaskId?: string): void;
 
   removeTask(task: Task): void;
 
   updateTask(task: Task): Task;
 }
 
+
 export type AgentLifecycle = "offline" | "running" | "pausing" | "paused" | "stopped";
 
 export class DefaultAgentRunModel implements AgentRunModel {
   private readonly id: string;
   private readonly goal: string;
+  tasks: any;
 
   constructor(goal: string) {
     this.id = v4().toString();
     this.goal = goal;
   }
+  getCurrentTask() {
+    throw new Error("Method not implemented.");
+  }
 
-  getId = () => this.id;
+
+    getId = () => this.id;
 
   getGoal = () => this.goal;
   getLifecycle = (): AgentLifecycle => useAgentStore.getState().lifecycle;
@@ -54,23 +60,17 @@ export class DefaultAgentRunModel implements AgentRunModel {
     return useTaskStore.getState().tasks.filter((t: Task) => t.status === "started");
   };
 
-  getCurrentTask = (): Task | undefined => this.getRemainingTasks()[0];
-
-  getCompletedTasks = (): Task[] =>
-    useTaskStore.getState().tasks.filter((t: Task) => t.status === "completed");
-
   addTask = (taskValue: string, parentTaskId?: string): void => {
-    if (!this.tasks.find((t) => t.value === taskValue)) {
-      useTaskStore.getState().addTask({
-        id: v4().toString(),
-        type: "task",
-        value: taskValue,
-        status: "started",
-        result: "",
-        parentTaskId,
-      });
-    }
+    useTaskStore.getState().addTask({
+      id: v4().toString(),
+      type: "task",
+      value: taskValue,
+      status: "started",
+      result: "",
+      parentTaskId,
+    });
   };
+
 
   removeTask = (task: Task): void => {
     const taskIndex = this.tasks.findIndex((t) => t.id === task.id);

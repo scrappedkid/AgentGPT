@@ -5,6 +5,7 @@ export default class StartGoalWork implements AgentWork {
   tasksValues: string[] = [];
 
   constructor(private parent: AutonomousAgent) {}
+  getData!: () => any;
 
   run = async () => {
     const goalMessage = this.parent.messageService.sendGoalMessage(this.parent.model.getGoal());

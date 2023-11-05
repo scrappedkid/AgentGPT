@@ -49,8 +49,12 @@ class AutonomousAgent {
 
     this.addTasksIfWorklogEmpty();
     while (this.workLog[0]) {
-      if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
-      if (this.model.getLifecycle() !== "running") return;
+      if (this.model.getLifecycle() === "pausing") {
+        this.model.setLifecycle("paused");
+      }
+      if (this.model.getLifecycle() !== "running") {
+        return;
+      }
 
       const work = this.workLog[0];
       const workData = this.workLog[0].getData();
@@ -71,8 +75,12 @@ class AutonomousAgent {
       this.addTasksIfWorklogEmpty();
     }
 
-    if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
-    if (this.model.getLifecycle() !== "running") return;
+    if (this.model.getLifecycle() === "pausing") {
+      this.model.setLifecycle("paused");
+    }
+    if (this.model.getLifecycle() !== "running") {
+      return;
+    }
 
     // Done with everything in the log and all queued tasks
     this.messageService.sendCompletedMessage();
@@ -83,7 +91,9 @@ class AutonomousAgent {
 
     await withRetries(
       async () => {
-        if (shouldStop()) return;
+        if (shouldStop()) {
+          return;
+        }
         await work.run();
       },
       async (e) => {
@@ -106,7 +116,9 @@ class AutonomousAgent {
   }
 
   addTasksIfWorklogEmpty = () => {
-    if (this.workLog.length > 0) return;
+    if (this.workLog.length > 0) {
+      return;
+    }
     const currentTask = this.model.getCurrentTask();
     if (currentTask) {
       this.workLog.push(new AnalyzeTaskWork(this, currentTask));
@@ -131,7 +143,9 @@ class AutonomousAgent {
   }
 
   async chat(message: string) {
-    if (this.model.getLifecycle() == "running") this.pauseAgent();
+    if (this.model.getLifecycle() == "running") {
+      this.pauseAgent();
+    }
     let paused = false;
     if (this.model.getLifecycle() == "stopped") {
       paused = true;
@@ -157,6 +171,7 @@ class AutonomousAgent {
 
     return messages;
   }
+
 }
 
 export default AutonomousAgent;
