@@ -42,7 +42,6 @@ class AutonomousAgent {
   async run() {
     this.model.setLifecycle("running");
 
-    // If an agent is paused during execution, we need to play work conclusions
     if (this.lastConclusion) {
       await this.lastConclusion();
       this.lastConclusion = undefined;
@@ -50,12 +49,16 @@ class AutonomousAgent {
 
     this.addTasksIfWorklogEmpty();
     while (this.workLog[0]) {
-      // No longer running, dip
-      if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
-      if (this.model.getLifecycle() !== "running") return;
+      if (this.model.getLifecycle() === "pausing") {
+        this.model.setLifecycle("paused");
+      }
+      if (this.model.getLifecycle() !== "running") {
+        return;
+      }
 
-      // Get and run the next work item
       const work = this.workLog[0];
+      const workData = this.workLog[0].getData();
+      const next = this.workLog[0].next(workData);
       await this.runWork(work, () => this.model.getLifecycle() === "stopped");
 
       this.workLog.shift();
@@ -65,8 +68,6 @@ class AutonomousAgent {
         await work.conclude();
       }
 
-      // Add next thing if available
-      const next = work.next();
       if (next) {
         this.workLog.push(next);
       }
@@ -74,23 +75,25 @@ class AutonomousAgent {
       this.addTasksIfWorklogEmpty();
     }
 
-    if (this.model.getLifecycle() === "pausing") this.model.setLifecycle("paused");
-    if (this.model.getLifecycle() !== "running") return;
+    if (this.model.getLifecycle() === "pausing") {
+      this.model.setLifecycle("paused");
+    }
+    if (this.model.getLifecycle() !== "running") {
+      return;
+    }
 
     // Done with everything in the log and all queued tasks
     this.messageService.sendCompletedMessage();
-    this.stopAgent();
   }
 
-  /*
-   * Runs a provided work object with error handling and retries
-   */
   private async runWork(work: AgentWork, shouldStop: () => boolean = () => false) {
     const RETRY_TIMEOUT = 2000;
 
     await withRetries(
       async () => {
-        if (shouldStop()) return;
+        if (shouldStop()) {
+          return;
+        }
         await work.run();
       },
       async (e) => {
@@ -102,7 +105,6 @@ class AutonomousAgent {
         }
 
         if (shouldRetry) {
-          // Wait a bit before retrying
           useAgentStore.getState().setIsAgentThinking(true);
           await new Promise((r) => setTimeout(r, RETRY_TIMEOUT));
         }
@@ -114,9 +116,9 @@ class AutonomousAgent {
   }
 
   addTasksIfWorklogEmpty = () => {
-    if (this.workLog.length > 0) return;
-
-    // No work items, check if we still have tasks
+    if (this.workLog.length > 0) {
+      return;
+    }
     const currentTask = this.model.getCurrentTask();
     if (currentTask) {
       this.workLog.push(new AnalyzeTaskWork(this, currentTask));
@@ -141,7 +143,9 @@ class AutonomousAgent {
   }
 
   async chat(message: string) {
-    if (this.model.getLifecycle() == "running") this.pauseAgent();
+    if (this.model.getLifecycle() == "running") {
+      this.pauseAgent();
+    }
     let paused = false;
     if (this.model.getLifecycle() == "stopped") {
       paused = true;
@@ -167,6 +171,7 @@ class AutonomousAgent {
 
     return messages;
   }
+
 }
 
 export default AutonomousAgent;

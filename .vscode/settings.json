@@ -1,0 +1,13 @@
+{
+    "python.testing.pytestEnabled": false,
+    "testExplorer.mergeSuites": true,
+    "testExplorer.useNativeTesting": true,
+    "python.testing.unittestEnabled": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./platform/reworkd_platform/tests",
+        "-p",
+        "*test*.py"
+    ]
+}
