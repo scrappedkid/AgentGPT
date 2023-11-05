@@ -82,15 +82,8 @@ class Search(Tool):
             elif answer_box.get("snippetHighlighted"):
                 answer_values.append(", ".join(answer_box.get("snippetHighlighted")))
 
-            if len(answer_values) > 0:
-                snippets.append(
-                    CitedSnippet(
-                        len(snippets) + 1,
-                        "\n".join(answer_values),
-                        f"https://www.google.com/search?q={quote(input_str)}",
-                    )
-                )
-
+            if answer_values:
+                return stream_string("\n".join(answer_values), True)
         for i, result in enumerate(results["organic"][:k]):
             texts = []
             link = ""
@@ -98,9 +91,12 @@ class Search(Tool):
                 texts.append(result["snippet"])
             if "link" in result:
                 link = result["link"]
-            for attribute, value in result.get("attributes", {}).items():
-                texts.append(f"{attribute}: {value}.")
-            snippets.append(CitedSnippet(len(snippets) + 1, "\n".join(texts), link))
+            texts.extend(
+                f"{attribute}: {value}."
+                for attribute, value in result.get("attributes", {}).items()
+            )
+
+            snippets.append(CitedSnippet(i + 1, "\n".join(texts), link))
 
         if not snippets:
             return stream_string("No good Google Search Result was found", True)
