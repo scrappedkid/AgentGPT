@@ -9,6 +9,10 @@ from reworkd_platform.web.api.agent.tools.tool import Tool
 
 
 class Code(Tool):
+    """
+    This class is used to generate, parse, and write code, as well as generate tags for the code.
+    It should only be used to write code, refactor code, fix code bugs, and explain programming concepts.
+    """
     description = "Should only be used to write code, refactor code, fix code bugs, and explain programming concepts."
     public_description = "Write and review code"
 
@@ -21,7 +25,7 @@ class Code(Tool):
 
         code_stream = await self.generate_code_stream(chain)
 
-        # Parse the generated code from the streaming response
+        # This method generates code, parses it, writes it to a shared folder, generates tags for the code, and returns a streaming response.
         code = self.parse_code_from_stream(code_stream)
 
         filename = f"{goal}_{task}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
