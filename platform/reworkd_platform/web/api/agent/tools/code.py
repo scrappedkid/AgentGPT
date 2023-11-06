@@ -9,8 +9,12 @@ from reworkd_platform.web.api.agent.tools.tool import Tool
 
 
 class Code(Tool):
-    description = "Should only be used to write code, refactor code, fix code bugs, and explain programming concepts."
-    public_description = "Write and review code"
+    """
+    The Code class is a subclass of the Tool class and is used to write, refactor, and fix code, as well as explain programming concepts.
+    It has methods to generate code, parse the generated code, write the code to a shared folder, and generate tags for the code.
+    """
+    description = "Used for writing, refactoring, fixing code, and explaining programming concepts."
+    public_description = "Write, refactor, and review code"
 
     async def call(
         self, goal: str, task: str, input_str: str, *args: Any, **kwargs: Any
@@ -21,7 +25,7 @@ class Code(Tool):
 
         code_stream = await self.generate_code_stream(chain)
 
-        # Parse the generated code from the streaming response
+        # Parse the generated code from the streaming response into a string format
         code = self.parse_code_from_stream(code_stream)
 
         filename = f"{goal}_{task}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
