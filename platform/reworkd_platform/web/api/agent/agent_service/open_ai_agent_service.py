@@ -38,6 +38,7 @@ from reworkd_platform.web.api.agent.tools.tools import (
 )
 from reworkd_platform.web.api.agent.tools.utils import summarize
 from reworkd_platform.web.api.errors import OpenAIError
+from reworkd_platform.web.api.shared_folder import SharedFolder
 
 
 class OpenAIAgentService(AgentService):
@@ -56,6 +57,7 @@ class OpenAIAgentService(AgentService):
         self.callbacks = callbacks
         self.user = user
         self.oauth_crud = oauth_crud
+        self.shared_folder = SharedFolder()
 
     async def start_goal_agent(self, *, goal: str) -> List[str]:
         prompt = ChatPromptTemplate.from_messages(
@@ -127,19 +129,22 @@ class OpenAIAgentService(AgentService):
         goal: str,
         task: str,
         analysis: Analysis,
-    ) -> StreamingResponse:
+    ) -> FastAPIStreamingResponse:
         # TODO: More mature way of calculating max_tokens
         if self.model.max_tokens > 3000:
             self.model.max_tokens = max(self.model.max_tokens - 1000, 3000)
 
         tool_class = get_tool_from_name(analysis.action)
-        return await tool_class(self.model, self.settings.language).call(
+        response = await tool_class(self.model, self.settings.language).call(
             goal,
             task,
             analysis.arg,
             self.user,
             self.oauth_crud,
         )
+        # Save the response to the shared folder
+        self.shared_folder.write(f'{goal}_{task}.txt', response)
+        return response
 
     async def create_tasks_agent(
         self,
