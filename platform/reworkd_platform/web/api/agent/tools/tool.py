@@ -10,6 +10,10 @@ from reworkd_platform.schemas.user import UserBase
 
 
 class Tool(ABC):
+    """
+    This is the base class for all tools. It provides the basic structure and common functionality for all tools, 
+    but does not implement any specific tool behavior. Specific tool behavior should be implemented in subclasses.
+    """
     description: str = ""
     public_description: str = ""
     arg_description: str = "The argument to the function."
@@ -39,6 +43,10 @@ class Tool(ABC):
         user: UserBase,
         oauth_crud: OAuthCrud,
     ) -> StreamingResponse:
+        """
+        This is a placeholder for the implementation of the call method in subclasses. 
+        It should be overridden in each subclass with the specific behavior for that tool.
+        """
         pass
 
     def read_from_shared_folder(self, file_name: str) -> str:
