@@ -9,6 +9,11 @@ from reworkd_platform.web.api.agent.tools.tool import Tool
 
 
 class Code(Tool):
+    """
+    This class is used to generate, refactor, and fix code, as well as explain programming concepts. 
+    It generates a stream of code using the LLMChain model, parses the code from the stream, 
+    writes the code and associated tags to a shared folder, and returns the code stream as a StreamingResponse.
+    """
     description = "Should only be used to write code, refactor code, fix code bugs, and explain programming concepts."
     public_description = "Write and review code"
 
@@ -21,7 +26,9 @@ class Code(Tool):
 
         code_stream = await self.generate_code_stream(chain)
 
-        # Parse the generated code from the streaming response
+        # Create an instance of LLMChain with the current model and the code prompt, generate a stream of code, 
+        # parse the code from the stream, write the code and associated tags to a shared folder, 
+        # and return the code stream as a StreamingResponse.
         code = self.parse_code_from_stream(code_stream)
 
         filename = f"{goal}_{task}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
