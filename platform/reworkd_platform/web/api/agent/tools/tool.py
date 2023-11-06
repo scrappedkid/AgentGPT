@@ -10,6 +10,11 @@ from reworkd_platform.schemas.user import UserBase
 
 
 class Tool(ABC):
+    """
+    This is a base class for all tools used by the agent. It provides the basic structure and methods that all tools should have.
+    Each tool should have a description, a public description, an argument description, and an image URL.
+    It also contains a model and a language, which are set during initialization.
+    """
     description: str = ""
     public_description: str = ""
     arg_description: str = "The argument to the function."
@@ -62,7 +67,7 @@ class Tool(ABC):
         return True
 
     def generate_tags(self, code: str) -> List[str]:
-        function_name = # extract function name from code
-        parameters = # extract parameters from code
-        summary = # generate a one-sentence summary of the code
+        function_name = # This line extracts the function name from the code
+        parameters = # This line extracts the parameters from the code
+        summary = # This line generates a one-sentence summary of the code
         return [function_name, parameters, summary]
