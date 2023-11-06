@@ -10,6 +10,13 @@ from reworkd_platform.schemas.user import UserBase
 
 
 class Tool(ABC):
+    """
+    The Tool class is an abstract base class that provides a blueprint for creating different types of tools.
+    Each tool has a description, a public description, an argument description, and an image URL.
+    The class also contains a model and a language attribute, which are initialized in the constructor.
+    The class provides methods to check if a tool is available, to write and read from a shared folder, 
+    to check if a code is relevant to a task, and to generate tags for a code.
+    """
     description: str = ""
     public_description: str = ""
     arg_description: str = "The argument to the function."
@@ -62,7 +69,7 @@ class Tool(ABC):
         return True
 
     def generate_tags(self, code: str) -> List[str]:
-        function_name = # extract function name from code
-        parameters = # extract parameters from code
-        summary = # generate a one-sentence summary of the code
+        function_name = # This line extracts the function name from the code
+        parameters = # This line extracts the parameters from the code
+        summary = # This line generates a one-sentence summary of the code
         return [function_name, parameters, summary]
