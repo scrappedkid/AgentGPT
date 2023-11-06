@@ -11,6 +11,8 @@ from reworkd_platform.schemas.user import UserBase
 
 class Tool(ABC):
     """
+    This is the base class for all tools. It provides the basic structure and common functionality for all tools, 
+    but does not implement any specific tool behavior. Specific tool behavior should be implemented in subclasses.
     The Tool class is an abstract base class that provides a blueprint for creating different types of tools.
     Each tool has a description, a public description, an argument description, and an image URL.
     The class also contains a model and a language attribute, which are initialized in the constructor.
