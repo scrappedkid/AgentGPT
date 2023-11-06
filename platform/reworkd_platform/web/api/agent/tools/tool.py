@@ -39,13 +39,44 @@ class Tool(ABC):
         user: UserBase,
         oauth_crud: OAuthCrud,
     ) -> StreamingResponse:
+        """
+        Abstract method that needs to be implemented by subclasses.
+        It is used to call the tool with the given goal, task, input string, user, and OAuth CRUD.
+        Returns a StreamingResponse.
+        """
         pass
 
     def read_from_shared_folder(self, file_name: str) -> str:
+        """
+        Reads a file from a shared folder and returns its content as a string.
+        """
         with open(f'SharedFolder/{file_name}', 'r') as file:
             return file.read()
 
-    def write_to_shared_folder(self, file_name: str, content: str) -> None:
+    def is_code_relevant(self, code: str, task: str) -> bool:
+        """
+        Checks if all keywords from a task are present in a given code string.
+        Returns True if all keywords are present, False otherwise.
+        """
+        keywords = task.split(' ')
+        for keyword in keywords:
+            if keyword not in code:
+                return False
+        return True
+
+    def generate_tags(self, code: str) -> List[str]:
+        """
+        Generates tags for a given code string.
+        The tags include the function name, parameters, and a one-sentence summary.
+        """
+        function_name = # extract function name from code
+        parameters = # extract parameters from code
+        summary = # generate a one-sentence summary of the code
+        return [function_name, parameters, summary]
+        """
+        Writes content to a file in a shared folder.
+        If the file already exists, creates a new version of the file.
+        """
         if os.path.exists(f'SharedFolder/{file_name}'):
             version = 1
             while os.path.exists(f'SharedFolder/{file_name}_{version}'):
