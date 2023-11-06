@@ -36,8 +36,7 @@ analyze_task_prompt = PromptTemplate(
 )
 
 code_prompt = PromptTemplate(
-    template="""
-    You are a world-class software engineer and an expert in all programing languages,
+    template="""You are a world-class software engineer and an expert in all programing languages,
     software systems, and architecture.
 
     For reference, your high level goal is {goal}
@@ -51,6 +50,8 @@ code_prompt = PromptTemplate(
 
     Write code to accomplish the following:
     {task}
+
+    Save the resulting code to the shared folder.
     """,
     input_variables=["goal", "language", "task"],
 )
