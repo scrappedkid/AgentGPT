@@ -17,6 +17,7 @@ class Code(Tool):
     description = "Should only be used to write code, refactor code, fix code bugs, and explain programming concepts."
     public_description = "Write and review code"
 
+
     async def call(
         self, goal: str, task: str, input_str: str, *args: Any, **kwargs: Any
     ) -> StreamingResponse:
@@ -29,6 +30,7 @@ class Code(Tool):
         # Create an instance of LLMChain with the current model and the code prompt, generate a stream of code, 
         # parse the code from the stream, write the code and associated tags to a shared folder, 
         # and return the code stream as a StreamingResponse.
+
         code = self.parse_code_from_stream(code_stream)
 
         filename = f"{goal}_{task}_{datetime.now().strftime('%Y%m%d%H%M%S')}.py"
