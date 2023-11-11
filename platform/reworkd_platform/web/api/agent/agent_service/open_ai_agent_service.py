@@ -81,7 +81,9 @@ class OpenAIAgentService(AgentService):
         )
 
         task_output_parser = TaskOutputParser(completed_tasks=[])
-        return parse_with_handling(task_output_parser, completion)
+        tasks = parse_with_handling(task_output_parser, completion)
+
+        return tasks
 
     async def analyze_task_agent(
         self, *, goal: str, task: str, tool_names: List[str]
@@ -119,7 +121,7 @@ class OpenAIAgentService(AgentService):
                 **analysis_arguments.dict(),
             )
         except (OpenAIError, ValidationError):
-            return Analysis.get_default_analysis(task)
+            return Analysis.get_default_analysis()
 
     async def execute_task_agent(
         self,
@@ -184,7 +186,7 @@ class OpenAIAgentService(AgentService):
 
         snippet_max_tokens = 7000  # Leave room for the rest of the prompt
         text_tokens = self.token_service.tokenize("".join(results))
-        text = self.token_service.detokenize(text_tokens[:snippet_max_tokens])
+        text = self.token_service.detokenize(text_tokens[0:snippet_max_tokens])
         logger.info(f"Summarizing text: {text}")
 
         return summarize(
@@ -200,7 +202,7 @@ class OpenAIAgentService(AgentService):
         message: str,
         results: List[str],
     ) -> FastAPIStreamingResponse:
-        self.model.model_name = "gpt-3.5-turbo-16k"
+        self.model.model_name =  "gpt-3.5-turbo-16k"
         prompt = ChatPromptTemplate.from_messages(
             [
                 SystemMessagePromptTemplate(prompt=chat_prompt),
