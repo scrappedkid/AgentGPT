@@ -61,3 +61,7 @@ def mock_session_with_run_count(mocker: MockerFixture, run_count: int) -> AsyncM
     session.execute.return_value = scalar_mock
     scalar_mock.scalar_one.return_value = run_count
     return session
+
+def test_update_task_status():
+    # Test logic for updating task status
+    # ...
