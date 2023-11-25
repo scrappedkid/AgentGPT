@@ -117,6 +117,16 @@ async def chat(
     )
 
 
+@router.patch("/tasks/{task_id}/status")
+async def update_task_status(
+    task_id: str,
+    status: str,
+    agent_service: AgentService = Depends(get_agent_service),
+) -> dict:
+    updated_task = await agent_service.update_task_status(task_id, status)
+    return {"updated_task": updated_task}
+
+
 class ToolModel(BaseModel):
     name: str
     description: str
