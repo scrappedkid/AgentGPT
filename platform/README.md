@@ -162,3 +162,7 @@ poetry run pytest -vv --cov="reworkd_platform" .
 poetry self add poetry-plugin-up
 poetry up --latest
 ```
+
+## Deployment
+- Update the `pyproject.toml` file with any new dependencies or version changes.
+- Deploy the new task management features using the following command:
