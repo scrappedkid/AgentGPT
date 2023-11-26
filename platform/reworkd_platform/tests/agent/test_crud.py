@@ -62,6 +62,21 @@ def mock_session_with_run_count(mocker: MockerFixture, run_count: int) -> AsyncM
     scalar_mock.scalar_one.return_value = run_count
     return session
 
+
 def test_update_task_status():
+    """
+    Test logic for updating task status.
+
+    This test function checks the behavior of the update_task_status API endpoint in the agent views module.
+    It should verify that the task status is correctly updated and return the updated task object.
+
+    Test steps:
+    1. Create a test task.
+    2. Update the task status using the update_task_status API endpoint.
+    3. Verify that the task status is updated correctly.
+    4. Verify that the updated task object is returned.
+
+    You can add more details or specific test cases as needed.
+    """
     # Test logic for updating task status
     # ...
