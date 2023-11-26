@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock
 import pytest
 from fastapi import HTTPException
 from pytest_mock import MockerFixture
+
 from reworkd_platform.db.crud.agent import AgentCRUD
 from reworkd_platform.settings import settings
 from reworkd_platform.web.api.errors import MaxLoopsError, MultipleSummaryError
@@ -60,6 +61,7 @@ def mock_session_with_run_count(mocker: MockerFixture, run_count: int) -> AsyncM
     session.execute.return_value = scalar_mock
     scalar_mock.scalar_one.return_value = run_count
     return session
+
 
 def test_update_task_status():
     """
