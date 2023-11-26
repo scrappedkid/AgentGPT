@@ -9,33 +9,28 @@ from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate
 from langchain.schema import HumanMessage
 from loguru import logger
 from pydantic import ValidationError
-
 from reworkd_platform.db.crud.oauth import OAuthCrud
 from reworkd_platform.schemas.agent import ModelSettings
 from reworkd_platform.schemas.user import UserBase
 from reworkd_platform.services.tokenizer.token_service import TokenService
-from reworkd_platform.web.api.agent.agent_service.agent_service import AgentService
+from reworkd_platform.web.api.agent.agent_service.agent_service import \
+    AgentService
 from reworkd_platform.web.api.agent.analysis import Analysis, AnalysisArguments
-from reworkd_platform.web.api.agent.helpers import (
-    call_model_with_handling,
-    openai_error_handler,
-    parse_with_handling,
-)
+from reworkd_platform.web.api.agent.helpers import (call_model_with_handling,
+                                                    openai_error_handler,
+                                                    parse_with_handling)
 from reworkd_platform.web.api.agent.model_factory import WrappedChatOpenAI
-from reworkd_platform.web.api.agent.prompts import (
-    analyze_task_prompt,
-    chat_prompt,
-    create_tasks_prompt,
-    start_goal_prompt,
-)
+from reworkd_platform.web.api.agent.prompts import (analyze_task_prompt,
+                                                    chat_prompt,
+                                                    create_tasks_prompt,
+                                                    start_goal_prompt)
 from reworkd_platform.web.api.agent.task_output_parser import TaskOutputParser
-from reworkd_platform.web.api.agent.tools.open_ai_function import get_tool_function
-from reworkd_platform.web.api.agent.tools.tools import (
-    get_default_tool,
-    get_tool_from_name,
-    get_tool_name,
-    get_user_tools,
-)
+from reworkd_platform.web.api.agent.tools.open_ai_function import \
+    get_tool_function
+from reworkd_platform.web.api.agent.tools.tools import (get_default_tool,
+                                                        get_tool_from_name,
+                                                        get_tool_name,
+                                                        get_user_tools)
 from reworkd_platform.web.api.agent.tools.utils import summarize
 from reworkd_platform.web.api.errors import OpenAIError
 
@@ -184,7 +179,7 @@ class OpenAIAgentService(AgentService):
         snippet_max_tokens = 7000  # Leave room for the rest of the prompt
         text_tokens = self.token_service.tokenize("".join(results))
         text = self.token_service.detokenize(text_tokens[:snippet_max_tokens])
-        logger.info(f"Summarizing text: {text}")
+        # logger.info(f"Summarizing text: {text}")
 
         return summarize(
             model=self.model,
