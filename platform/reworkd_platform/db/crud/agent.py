@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
 
 from reworkd_platform.db.crud.base import BaseCrud
 from reworkd_platform.db.models.agent import AgentRun, AgentTask
@@ -21,11 +22,12 @@ class AgentCRUD(BaseCrud):
             goal=goal,
         ).save(self.session)
 
-    async def create_task(self, run_id: str, type_: Loop_Step) -> AgentTask:
+    async def create_task(self, run_id: str, type_: Loop_Step, result: Optional[str] = None) -> AgentTask:
         await self.validate_task_count(run_id, type_)
         return await AgentTask(
             run_id=run_id,
             type_=type_,
+            result=result,
         ).save(self.session)
 
     async def validate_task_count(self, run_id: str, type_: str) -> None:
